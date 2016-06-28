@@ -1,6 +1,5 @@
 package io.pivotal.tg;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +7,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.cloudfoundry.com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.cloud.cloudfoundry.com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -38,29 +33,7 @@ public class ServiceDiscovererApplication {
     private ObjectMapper mapper = new ObjectMapper();
 
     @RequestMapping(value = "/techniques-rest", method = RequestMethod.GET)
-    @HystrixCommand(fallbackMethod = "backupTechniques")
     public String techniquesRest() {
-        try {
-            URI uri = UriComponentsBuilder.fromUriString("https://training-grounds/techniques")
-                    .build()
-                    .toUri();
-
-            Object[] forNow = rest.getForObject(uri, Object[].class);
-            return mapper.writeValueAsString(forNow);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return "{}";
-    }
-
-    public String backupTechniques() {
-        return "[[\n" +
-                "{\n" +
-                "name: \"irimi nage\"\n" +
-                "},\n" +
-                "{\n" +
-                "name: \"shiho nage\"\n" +
-                "}\n" +
-                "]";
+       return new CommandTechniques(rest).execute().toString();
     }
 }
