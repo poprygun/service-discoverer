@@ -1,0 +1,8 @@
+---
+applications:
+- name: service-discoverer
+  host: ashumilov-sd
+  path: target/service-discoverer.jar
+  services:
+    - config-server
+    - service-registry

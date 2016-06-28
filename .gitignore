@@ -22,7 +22,6 @@ dependency-reduced-pom.xml
 build.log
 _site/
 .*.md.html
-manifest.yml
 MANIFEST.MF
 settings.xml
 activemq-data
