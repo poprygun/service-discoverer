@@ -1,0 +1,20 @@
+box: maven:latest
+build:
+  steps:
+    - xenoterracide/maven:
+        goals: install
+#    - script:
+#        name: list directory
+#        code: ls -R . | awk '/:$/&&f{s=$0;f=0}/:$/&&!f{sub(/:$/,"");s=$0;f=1;next}NF&&f{ print s"/"$0 }'
+deploy:
+  steps:
+    - xchapter7x/cf-push:
+        cloudfoundry_user_name: $cfuser
+        cloudfoundry_user_pass: $cfpass
+        cloudfoundry_org: $cforg
+        cloudfoundry_space: $cfspace
+        cloudfoundry_api_url: $cfurl
+        cloudfoundry_app_name: $cfappname
+        cloudfoundry_use_manifest: true
+        cloudfoundry_buildpack: $cfbuildpack
+        cloudfoundry_host: $cfhost
