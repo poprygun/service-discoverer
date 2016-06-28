@@ -6,3 +6,4 @@ applications:
   services:
     - config-server
     - service-registry
+    - service-breaker
